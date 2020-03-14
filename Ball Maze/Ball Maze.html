@@ -1,0 +1,136 @@
+<html>
+ 
+ <canvas id = "gc" width = "800" height = "600"> </canvas>
+ <script src="Level 2.js"></script>
+ <script src="Level 3.js"></script>
+ <script>
+var canvas;
+var canvasContext;
+var wall_1_W=100;
+var wall_2_X=160;
+var wall_2_W=660;
+var wall_3_Y=350;
+var ballX=130;
+var ballY=20;
+var ballR=10;
+var ballSpeedX=0;
+var ballSpeedY=0;
+var start=false;
+var win1=false;
+var win2=false;
+
+function winCond()
+	{
+		if (ballX>=canvas.width-20 && ballY-ballR>canvas.height/2 && ballY+ballR<=wall_3_Y)
+		  {
+		    canvasContext.fillStyle='white';
+			canvasContext.fillText("AI CASTIGAT! Apasa Click pentru a avansa la nivelul urmator",250,100);
+			ballSpeedX=0; ballSpeedY=0;
+			canvas.addEventListener('click',levelChange2);
+		  }
+		  
+	}
+function checkKey(key)
+	{
+	if (key.keyCode=='65') //A
+	{
+	ballSpeedX-=0.35;
+	}
+	if (key.keyCode=='68') //D
+	ballSpeedX+=0.35;
+	if (key.keyCode=='87') //W
+	{
+	ballSpeedY-=0.35;
+	}
+	if (key.keyCode=='83') //S
+	ballSpeedY+=0.35;
+	}
+window.onload = function() 
+	{
+	canvas = document.getElementById('gc');
+	canvasContext = canvas.getContext('2d');	
+	var fps= 60;
+	setInterval(All,1000/fps);
+	window.addEventListener('keydown',checkKey,true);
+	
+	}	
+function All() 
+	{
+	if (win1)
+		{if (win2)
+			drawAll3();
+		else
+			drawAll2();
+		}
+	else
+	  drawAll();
+	
+	animations();
+	}	
+function drawAll() 
+	{
+	
+	//bg
+	rect(0,0,canvas.width,canvas.height,'#6E6E6E');
+	//walls
+	rect(0,0,wall_1_W,canvas.height,'red');
+	rect(wall_2_X,0,wall_2_W,canvas.height/2,'red');
+	rect(wall_2_X-60,wall_3_Y,wall_2_W+60,canvas.height/2+50,'red');
+	//player
+	circle (ballX,ballY,10,'#00FCFF');
+	}
+function levelChange2()
+	{	
+		win1=true;
+		ballX=130;
+		ballY=20;
+		ballSpeedX=0;
+		ballSpeedY=0;
+	}
+function ballReset()
+	{
+		ballX=130;
+		ballY=20;
+		ballSpeedX=0;
+		ballSpeedY=0;
+	}
+function collisions1()
+	{
+		if (ballX-ballR<=wall_1_W)
+			ballReset();
+		if ((ballX+ballR>=wall_2_X && ballY-ballR<=canvas.height/2)|| (ballY-ballR<=canvas.height/2 && ballX+ballR>=wall_2_X ))
+			ballReset();
+		if (ballY+ballR>=wall_3_Y)
+			ballReset();
+	}
+function animations() 
+	{
+	  ballX+=ballSpeedX;
+	  ballY+=ballSpeedY;
+	 winCond();
+	 if (!win1)
+		collisions1();
+	else
+		if (win2)
+		  collisions3();
+		else
+		  collisions2();
+		
+	}
+		
+function rect(X,Y,width,height,color) 
+	{
+	canvasContext.fillStyle = color;
+	canvasContext.fillRect(X,Y, width, height);
+	}
+		
+function circle(X,Y, radius, color) 
+	{
+	canvasContext.fillStyle = color;
+	canvasContext.beginPath();
+	canvasContext.arc(X,Y, radius, 0, Math.PI*2, true);
+	canvasContext.fill();
+	}
+</script>
+</html>
+

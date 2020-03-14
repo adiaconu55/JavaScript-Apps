@@ -1,0 +1,131 @@
+<html>
+<canvas id='bg' width='800' height='600'></canvas>
+
+<script>
+
+var canvas;
+var canvasContext;
+var X1=100;
+var Y1=120;
+var X2=500;
+var Y2=500;
+var X=400;
+var Y=300;
+var ballSpeedX1=5;
+var ballSpeedY1=5;
+var ballSpeedX2=-5;
+var ballSpeedY2=5;
+var ballSpeedX=0;
+var ballSpeedY=0;
+var ballRad=20;
+var movementSpeed=1;
+
+window.onload=function()
+	{
+		canvas=document.getElementById('bg');
+		canvasContext=canvas.getContext('2d');
+		var fps=60;
+		setInterval(All,1000/fps);
+		window.addEventListener('keydown',checkKey,true);
+	}
+function All()
+	{
+		collisions();
+		drawAll();
+		animations();
+	}
+function drawAll()
+	{
+		//bg
+		rect(0,0,canvas.width,canvas.height,'black');
+		//ball_1
+		circle(X1,Y1,ballRad,'red');
+		//ball_2
+		circle(X2,Y2,ballRad,'red');
+		//ball_3
+		circle(X,Y,ballRad-10,'white');
+	}
+function timer()
+	{
+		canvasContext.fillStyle='white';
+		canvasContext.fillText();
+	}
+function animations()
+	{
+		X1+=ballSpeedX1;
+		Y1+=ballSpeedY1;
+		X2+=ballSpeedX2;
+		Y2+=ballSpeedY2;
+		X+=ballSpeedX;
+		Y+=ballSpeedY;
+		//ball 1
+			if(X1+ballRad>=canvas.width)
+				ballSpeedX1=-ballSpeedX1;
+			if(Y1+ballRad>=canvas.height)
+				ballSpeedY1=-ballSpeedY1;
+			if(X1-ballRad<=0)
+				ballSpeedX1=-ballSpeedX1;
+			if(Y1-ballRad<=0)
+				ballSpeedY1=-ballSpeedY1;
+		//ball 2
+			if(X2+ballRad>=canvas.width)
+				ballSpeedX2=-ballSpeedX2;
+			if(Y2+ballRad>=canvas.height)
+				ballSpeedY2=-ballSpeedY2;
+			if(X2-ballRad<=0)
+				ballSpeedX2=-ballSpeedX2;
+			if(Y2-ballRad<=0)
+				ballSpeedY2=-ballSpeedY2;
+		//ball 3
+			if(X+ballRad>=canvas.width)
+				ballSpeedX=-ballSpeedX;
+			if(Y+ballRad>=canvas.height)
+				ballSpeedY=-ballSpeedY;
+			if(X-ballRad<=0)
+				ballSpeedX=-ballSpeedX;
+			if(Y-ballRad<=0)
+				ballSpeedY=-ballSpeedY;
+	}
+function checkKey(key)
+	{
+	if (key.keyCode=='65') //A
+	{
+	ballSpeedX-=movementSpeed;
+	}
+	if (key.keyCode=='68') //D
+	ballSpeedX+=movementSpeed;
+	if (key.keyCode=='87') //W
+	{
+	ballSpeedY-=movementSpeed;
+	}
+	if (key.keyCode=='83') //S
+	ballSpeedY+=movementSpeed;
+	}
+function collisions()
+	{
+		if(X+ballRad-10>=X1-ballRad && X-ballRad-10<=X1 && Y+ballRad-10>=Y1-ballRad && Y-ballRad-10<=Y1)
+			Reset();
+		if(X+ballRad-10>=X2-ballRad && X-ballRad-10<=X2 && Y+ballRad-10>=Y2-ballRad && Y-ballRad-10<=Y2)
+			Reset();
+	}
+function Reset()
+	{
+		ballSpeedX=0;
+		ballSpeedY=0;
+		X=400;
+		Y=300;
+	}
+function circle(X,Y,radius,color)
+	{
+		canvasContext.fillStyle=color;
+		canvasContext.beginPath();
+		canvasContext.arc(X,Y,radius,0,Math.PI*2,true);
+		canvasContext.fill();
+	}
+function rect(X,Y,width,height,color)
+	{
+		canvasContext.fillStyle=color;
+		canvasContext.fillRect(X,Y,width,height);
+	}
+</script>
+</html>

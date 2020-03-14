@@ -1,0 +1,81 @@
+<html>
+ 
+ <canvas id = "gc" width = "800" height = "600"> </canvas>
+ <script src='shooter2.js'> </script>
+ <script>
+ var canvas;
+ var canvasContext;
+ var playerX=360;
+ var playerY=560;
+ var playerW=70;
+ var playerSpeed=20;
+ var shootSpeed=10;
+ var shootY=playerY-15;
+ var shootX=playerX+playerW/2-3.5;
+ var fire=false;
+ 
+ 
+ window.onload = function() 
+	{
+	canvas = document.getElementById('gc');
+	canvasContext = canvas.getContext('2d');	
+	var fps= 60;
+	setInterval(All,1000/fps);
+	window.addEventListener('keydown',checkKey);
+	}	
+function checkKey(key)
+	{
+		if (key.keyCode==65 && playerX-10>=0) //A
+			playerX-=playerSpeed;
+		if (key.keyCode==68 && playerX+playerW+10<=canvas.width) //D
+			playerX+=playerSpeed;
+		if (key.keyCode==32)
+			fire=true;
+	}
+function All()
+	{
+		animations();
+		drawAll();
+	}
+function drawAll()
+	{	
+		rect(0,0,canvas.width,canvas.height,'black');
+		player();
+		if (!hit)
+		AICharacter();
+		if(fire)
+			shoot();
+		if (!fire)
+		{shootY=playerY-15; shootX=playerX+playerW/2-3.5;}
+		if (hit)
+		 win();
+	}
+function animations()
+	{
+	if (!hit)
+		AI();
+		aiX+=aiSpeed;
+	if (shootY<0)
+			fire=false;
+	if (fire)
+		{shootY-=shootSpeed;collision();}
+	}
+function shoot()
+	{
+		rect(shootX,shootY,7,15,'white');
+	}
+function player()
+	{
+		rect(playerX,playerY,playerW,15,'white');
+		rect(playerX,playerY-7,10,29,'white');
+		rect(playerX+playerW-10,playerY-7,10,29,'white');
+		rect(playerX+playerW/2-3.5,playerY-15,7,15,'white');
+	}
+function rect(X,Y,width,height,color)
+	{
+		canvasContext.fillStyle=color;
+		canvasContext.fillRect(X,Y,width,height);
+	}
+	
+	</script>
+	</html>

@@ -1,0 +1,104 @@
+<html>
+ 
+ <canvas id = "gameCanvas" width = "800" height = "600"> </canvas>
+ 
+ <script>
+  
+  var canvas;
+  var canvasContext;
+  var paddleWidth=100;
+  var paddleHeight=10;
+  var paddleX;
+  var ballRadius=10;
+  var ballX=400;
+  var ballY=300;
+  var ballSpeedX=8;
+  var ballSpeedY=8;
+  var number=7;
+  var bar1X=10;
+  var bar1Y=100;
+  var x=true;
+  
+
+window.onload=function()
+	{
+    canvas=document.getElementById('gameCanvas');
+	canvasContext=canvas.getContext('2d');
+	var fps=444;
+	setInterval(Both,1000/fps);
+	drawAll();
+	canvas.addEventListener('mousemove',function(evt) {
+	  var mouseP = mousePos(evt); paddleX=mouseP.x-paddleWidth/2;
+	  })
+	}
+
+function Both()
+	{
+		drawAll();
+		animation();
+	}
+function mousePos(evt)
+	{
+		var rect=canvas.getBoundingClientRect();
+		var root=document.documentElement;
+		var mouseX=evt.clientX - rect.left - root.scrollLeft;
+		var mouseY=evt.clientY - rect.top - root.scrollTop;
+		return{
+		x:mouseX,
+		y:mouseY
+		};
+	}
+function drawAll()
+	{
+		canvasContext.fillStyle='black';
+		canvasContext.fillRect(0,0,canvas.width,canvas.height);
+		rect(paddleX,canvas.height-paddleHeight-10,paddleWidth,paddleHeight,'white');
+		//for (var i=15;i<20;i+=110)//canvas.width-100
+			if (x){
+				rect(15,100,paddleWidth,paddleHeight,'red');
+			}
+		circle(ballX,ballY,ballRadius,'white');
+	}
+function rect(X,Y,width,height,color)
+	{
+		canvasContext.fillStyle=color;
+		canvasContext.fillRect(X,Y,width,height);
+	}
+function circle(X,Y,radius,color)
+	{
+		canvasContext.fillStyle=color;
+		canvasContext.beginPath();
+		canvasContext.arc(X,Y,radius,0,Math.PI*2,true);
+		canvasContext.fill();
+	}
+function ballReset()
+	{
+		ballX=400;
+		ballY=300;
+	}
+function animation()
+	{
+	ballX+=ballSpeedX;
+	ballY+=ballSpeedY;
+		if (ballX<=10)
+		    ballSpeedX=-ballSpeedX;
+		if (ballX>canvas.width-10)
+		    ballSpeedX=-ballSpeedX;
+		if (ballY<=10)
+		 ballSpeedY=-ballSpeedY;
+		if (ballY>=canvas.height-20)
+			if (ballX>=paddleX && ballX<=paddleX+paddleWidth)
+			{ballSpeedY=-ballSpeedY;
+			var deltaX=ballX - (paddleX+paddleWidth/2);
+		  ballSpeedX=deltaX*0.35;}
+		else
+		 ballReset();
+		 if (ballY==bar1Y)
+		 if (ballX>bar1X && ballX< bar1X+paddleWidth)
+		  {  x=false; ballSpeedY=-ballSpeedY;}
+		
+	}
+ </script>
+ 
+ 
+</html>

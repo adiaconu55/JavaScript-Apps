@@ -1,0 +1,102 @@
+<html>
+<canvas id="bg" width="800" height="600"></canvas>
+<script>
+
+var canvas=document.getElementById("bg");
+var context=canvas.getContext('2d');
+var birdX=100;
+var birdY=290;
+var birdSpeedY=15;
+var birdAcc=-100;
+var WallX=800;
+var WallY=400;
+var Wall2X=800;
+var Wall2Y=0;
+var Wall2H=200;
+var WallSpeed=5;
+var bg='cyan';
+var points=0;
+var high=0;
+window.onload=function()
+{
+	var fps=60;
+	setInterval(all,1000/fps);
+	window.addEventListener('keydown',checkKey,true);
+}
+function checkKey(key)
+{
+	if(key.keyCode=='32')
+		birdSpeedY=birdAcc;
+}
+function all()
+{
+	Animations();
+	birdSpeedY=3;
+	collision();
+	drawAll();
+}
+function reset()
+{
+	bg='cyan';
+	birdY=290;
+	birdSpeedY=15;
+	WallSpeed=5;
+	WallX=800;
+	Wall2X=800;
+	points=0;
+}
+function gameOver()
+{
+	if(high<points)
+	high=points;
+	birdSpeedY=0;
+	WallSpeed=0;
+	bg='#5C0C0C';
+	context.fillStyle='black';
+	context.fillText("AI PIERDUT! Apasa click pentru a reseta.",350,100);
+	canvas.addEventListener('click',reset);
+}
+function collision()
+{
+	if(birdX+15>=WallX && birdX-15<WallX+50 && birdY+15>=WallY)
+		gameOver();
+	if(birdX+15>=WallX && birdX-15<WallX+50 && birdY-15<=Wall2Y+Wall2H)
+		gameOver();
+	if(birdY-20<=0 || birdY+20>=canvas.height)
+		gameOver();
+}
+function drawAll()
+{
+	Rect(0,0,canvas.width,canvas.height,bg); 	//bg
+	circle(birdX,birdY,20,'blue'); 				//bird
+	Rect(WallX,WallY,50,500,'red'); 			//wall1
+	Rect(Wall2X,Wall2Y,50,Wall2H,'red'); 		// wall2
+	context.fillStyle='black';
+	context.fillText("Score:",370,50);
+	context.fillText(points,400,50);
+	context.fillText("High Score:",700,570);
+	context.fillText(high,755,570);
+
+}
+
+function Animations()
+{
+	birdY+=birdSpeedY;
+	WallX-=WallSpeed;
+	Wall2X-=WallSpeed;
+	if(WallX+50<0)
+	{WallX=800; Wall2X=800; WallY=Math.floor(Math.random()*400)+200; Wall2H=WallY-200; points++;}
+}
+function Rect(x,y,width,height,color)
+{context.fillStyle=color;
+ context.fillRect(x,y,width,height);}
+ function circle(x,y,radius,color)
+	{
+		context.fillStyle=color;
+		context.beginPath();
+		context.arc(x,y,radius,0,Math.PI*2,true);
+		context.fill();
+	}
+
+</script>
+</html>
